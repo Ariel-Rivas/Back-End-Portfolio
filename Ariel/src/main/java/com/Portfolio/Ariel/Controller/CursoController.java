@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/curs")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://appari.herokuapp.com")
 public class CursoController {
 
 @Autowired ImpCursoService ipmCursoService;

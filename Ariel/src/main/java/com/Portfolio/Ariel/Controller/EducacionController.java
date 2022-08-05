@@ -37,8 +37,9 @@ public class EducacionController {
     
     @GetMapping("/detail/{id}")
     public ResponseEntity<Educacion> getById(@PathVariable("id") int id){
-        if( impeducacionService.existsById(id))
+        if( impeducacionService.existsById(id)){
             return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+        }
        Educacion educacion =  impeducacionService.getOne(id).get();
         return new ResponseEntity(educacion, HttpStatus.OK);
     }
@@ -55,11 +56,12 @@ public class EducacionController {
     
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody dtoEducacion dtoeduc){      
-        if(StringUtils.isBlank(dtoeduc.getNombre()))
+        if(StringUtils.isBlank(dtoeduc.getNombre())){
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
-        if( impeducacionService.existsByNombre(dtoeduc.getNombre()))
+        }
+        if( impeducacionService.existsByNombre(dtoeduc.getNombre())){
             return new ResponseEntity(new Mensaje("Esa educacion existe"), HttpStatus.BAD_REQUEST);
-        
+        }
        Educacion educacion = new Educacion(dtoeduc.getNombre(), dtoeduc.getLugar(),dtoeduc.getEstado());
        impeducacionService.save(educacion);
         
@@ -69,15 +71,17 @@ public class EducacionController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody dtoEducacion dtoeduc){
         //Validamos si existe el ID
-        if(! impeducacionService.existsById(id))
+        if(! impeducacionService.existsById(id)){
             return new ResponseEntity(new Mensaje("El ID no existe"), HttpStatus.BAD_REQUEST);
+        }
         //Compara nombre de experiencias
-        if( impeducacionService.existsByNombre(dtoeduc.getNombre()) &&  impeducacionService.getByNombre(dtoeduc.getNombre()).get().getId() != id)
+        if( impeducacionService.existsByNombre(dtoeduc.getNombre()) &&  impeducacionService.getByNombre(dtoeduc.getNombre()).get().getId() != id){
             return new ResponseEntity(new Mensaje("La educacion  ya existe"), HttpStatus.BAD_REQUEST);
+        }
         //No puede estar vacio
-        if(StringUtils.isBlank(dtoeduc.getNombre()))
+        if(StringUtils.isBlank(dtoeduc.getNombre())){
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
-        
+        }
        Educacion educacion = impeducacionService.getOne(id).get();
         educacion.setNombre(dtoeduc.getNombre());
         educacion.setLugar(dtoeduc.getLugar());

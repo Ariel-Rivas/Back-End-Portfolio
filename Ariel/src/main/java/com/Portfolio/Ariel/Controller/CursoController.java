@@ -36,8 +36,9 @@ public class CursoController {
     
     @GetMapping("/detail/{id}")
     public ResponseEntity<Curso> getById(@PathVariable("id") int id){
-        if( ipmCursoService.existsById(id))
+        if( ipmCursoService.existsById(id)){
             return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+        }
        Curso curso =  ipmCursoService.getOne(id).get();
         return new ResponseEntity(curso, HttpStatus.OK);
     }
@@ -54,11 +55,12 @@ public class CursoController {
     
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody dtoCurso dtocurs){      
-        if(StringUtils.isBlank(dtocurs.getNombre()))
+        if(StringUtils.isBlank(dtocurs.getNombre())){
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
-        if( ipmCursoService.existsByNombre(dtocurs.getNombre()))
+        }
+        if( ipmCursoService.existsByNombre(dtocurs.getNombre())){
             return new ResponseEntity(new Mensaje("Ese curso existe"), HttpStatus.BAD_REQUEST);
-        
+        }
        Curso curso = new Curso(dtocurs.getNombre(), dtocurs.getLugar(),dtocurs.getFecha());
        ipmCursoService.save(curso);
         
@@ -68,15 +70,17 @@ public class CursoController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody dtoCurso dtocurs){
         //Validamos si existe el ID
-        if(! ipmCursoService.existsById(id))
+        if(! ipmCursoService.existsById(id)){
             return new ResponseEntity(new Mensaje("El ID no existe"), HttpStatus.BAD_REQUEST);
+        }
         //Compara nombre de experiencias
-        if( ipmCursoService.existsByNombre(dtocurs.getNombre()) &&  ipmCursoService.getByNombre(dtocurs.getNombre()).get().getId() != id)
+        if( ipmCursoService.existsByNombre(dtocurs.getNombre()) &&  ipmCursoService.getByNombre(dtocurs.getNombre()).get().getId() != id){
             return new ResponseEntity(new Mensaje("El curso ya existe"), HttpStatus.BAD_REQUEST);
+        }
         //No puede estar vacio
-        if(StringUtils.isBlank(dtocurs.getNombre()))
+        if(StringUtils.isBlank(dtocurs.getNombre())){
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
-        
+        }
        Curso curso = ipmCursoService.getOne(id).get();
         curso.setNombre(dtocurs.getNombre());
         curso.setLugar(dtocurs.getLugar());

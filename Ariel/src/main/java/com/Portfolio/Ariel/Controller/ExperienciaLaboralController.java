@@ -38,8 +38,9 @@ public class ExperienciaLaboralController {
     
     @GetMapping("/detail/{id}")
     public ResponseEntity<ExperienciaLaboral> getById(@PathVariable("id") int id){
-        if(impexperienciaLaboralService.existsById(id))
+        if(impexperienciaLaboralService.existsById(id)){
             return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+        }
         ExperienciaLaboral experienciaLaboral = impexperienciaLaboralService.getOne(id).get();
         return new ResponseEntity(experienciaLaboral, HttpStatus.OK);
     }
@@ -56,11 +57,12 @@ public class ExperienciaLaboralController {
     
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody dtoExperienciaLaboral dtoexp){      
-        if(StringUtils.isBlank(dtoexp.getNombre()))
+        if(StringUtils.isBlank(dtoexp.getNombre())){
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
-        if(impexperienciaLaboralService.existsByNombre(dtoexp.getNombre()))
+        }
+        if(impexperienciaLaboralService.existsByNombre(dtoexp.getNombre())){
             return new ResponseEntity(new Mensaje("Esa experiencia existe"), HttpStatus.BAD_REQUEST);
-        
+        }
         ExperienciaLaboral experienciaLaboral = new ExperienciaLaboral(dtoexp.getNombre(), dtoexp.getLugar(),dtoexp.getFecha(),dtoexp.getTarea());
        impexperienciaLaboralService.save(experienciaLaboral);
         
@@ -70,15 +72,17 @@ public class ExperienciaLaboralController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody dtoExperienciaLaboral dtoexp){
         //Validamos si existe el ID
-        if(! impexperienciaLaboralService.existsById(id))
+        if(! impexperienciaLaboralService.existsById(id)){
             return new ResponseEntity(new Mensaje("El ID no existe"), HttpStatus.BAD_REQUEST);
+        }
         //Compara nombre de experiencias
-        if( impexperienciaLaboralService.existsByNombre(dtoexp.getNombre()) &&  impexperienciaLaboralService.getByNombre(dtoexp.getNombre()).get().getId() != id)
+        if( impexperienciaLaboralService.existsByNombre(dtoexp.getNombre()) &&  impexperienciaLaboralService.getByNombre(dtoexp.getNombre()).get().getId() != id){
             return new ResponseEntity(new Mensaje("Esa experiencia ya existe"), HttpStatus.BAD_REQUEST);
+        }
         //No puede estar vacio
-        if(StringUtils.isBlank(dtoexp.getNombre()))
+        if(StringUtils.isBlank(dtoexp.getNombre())){
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
-        
+        }
         ExperienciaLaboral experienciaLaboral = impexperienciaLaboralService.getOne(id).get();
         experienciaLaboral.setNombre(dtoexp.getNombre());
         experienciaLaboral.setLugar(dtoexp.getLugar());

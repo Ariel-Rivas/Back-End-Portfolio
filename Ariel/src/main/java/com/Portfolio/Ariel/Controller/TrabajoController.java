@@ -35,8 +35,9 @@ public class TrabajoController {
     
     @GetMapping("/detail/{id}")
     public ResponseEntity<Trabajo> getById(@PathVariable("id") int id){
-        if( imptrabajoService.existsById(id))
+        if( imptrabajoService.existsById(id)){
             return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+        }
        Trabajo trabajo =  imptrabajoService.getOne(id).get();
         return new ResponseEntity(trabajo, HttpStatus.OK);
     }
@@ -53,11 +54,12 @@ public class TrabajoController {
     
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody dtoTrabajo dtotrab){      
-        if(StringUtils.isBlank(dtotrab.getNombre()))
+        if(StringUtils.isBlank(dtotrab.getNombre())){
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
-        if( imptrabajoService.existsByNombre(dtotrab.getNombre()))
+        }
+        if( imptrabajoService.existsByNombre(dtotrab.getNombre())){
             return new ResponseEntity(new Mensaje("Ese trabajo existe"), HttpStatus.BAD_REQUEST);
-        
+        }
        Trabajo trabajo = new Trabajo(dtotrab.getNombre(), dtotrab.getComentario(),dtotrab.getPosicion(),dtotrab.getFoto());
      imptrabajoService.save(trabajo);
         
@@ -67,15 +69,17 @@ public class TrabajoController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody dtoTrabajo dtotrab){
         //Validamos si existe el ID
-        if(!  imptrabajoService.existsById(id))
+        if(!  imptrabajoService.existsById(id)){
             return new ResponseEntity(new Mensaje("El ID no existe"), HttpStatus.BAD_REQUEST);
+        }
         //Compara nombre de experiencias
-        if( imptrabajoService.existsByNombre(dtotrab.getNombre()) &&   imptrabajoService.getByNombre(dtotrab.getNombre()).get().getId() != id)
+        if( imptrabajoService.existsByNombre(dtotrab.getNombre()) &&   imptrabajoService.getByNombre(dtotrab.getNombre()).get().getId() != id){
             return new ResponseEntity(new Mensaje("El trabajo  ya existe"), HttpStatus.BAD_REQUEST);
+        }
         //No puede estar vacio
-        if(StringUtils.isBlank(dtotrab.getNombre()))
+        if(StringUtils.isBlank(dtotrab.getNombre())){
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
-        
+        }
       Trabajo trabajo = imptrabajoService.getOne(id).get();
         trabajo.setNombre(dtotrab.getNombre());
         trabajo.setComentario(dtotrab.getComentario());

@@ -36,7 +36,7 @@ public class CursoController {
     
     @GetMapping("/detail/{id}")
     public ResponseEntity<Curso> getById(@PathVariable("id") int id){
-        if( ipmCursoService.existsById(id)){
+        if(! ipmCursoService.existsById(id)){
             return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
         }
        Curso curso =  ipmCursoService.getOne(id).get();

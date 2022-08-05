@@ -38,7 +38,7 @@ public class ExperienciaLaboralController {
     
     @GetMapping("/detail/{id}")
     public ResponseEntity<ExperienciaLaboral> getById(@PathVariable("id") int id){
-        if(impexperienciaLaboralService.existsById(id)){
+        if( ! impexperienciaLaboralService.existsById(id)){
             return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
         }
         ExperienciaLaboral experienciaLaboral = impexperienciaLaboralService.getOne(id).get();

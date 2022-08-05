@@ -35,7 +35,7 @@ public class TrabajoController {
     
     @GetMapping("/detail/{id}")
     public ResponseEntity<Trabajo> getById(@PathVariable("id") int id){
-        if( imptrabajoService.existsById(id)){
+        if(! imptrabajoService.existsById(id)){
             return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
         }
        Trabajo trabajo =  imptrabajoService.getOne(id).get();
